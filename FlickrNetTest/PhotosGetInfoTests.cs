@@ -1,11 +1,11 @@
-﻿using System;
-using System.Linq;
+﻿using FlickrNet;
 using FlickrNet.Exceptions;
 using NUnit.Framework;
-using FlickrNet;
-using System.Reactive.Subjects;
-using System.Reactive.Linq;
 using Shouldly;
+using System;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Reactive.Subjects;
 
 namespace FlickrNetTest
 {
@@ -38,7 +38,7 @@ namespace FlickrNetTest
 
             Assert.AreEqual("12. Sudoku", info.Title);
             Assert.AreEqual("It scares me sometimes how much some of my handwriting reminds me of Dad's " +
-                            "- in this photo there is one 5 that especially reminds me of his handwriting.", info.Description);
+                                            "- in this photo there is one 5 that especially reminds me of his handwriting.", info.Description);
 
             //Owner
             Assert.AreEqual("41888973@N00", info.OwnerUserId);
@@ -80,6 +80,16 @@ namespace FlickrNetTest
         }
 
         [Test]
+        [Category("AccessTokenRequired")]
+        public void PhotosGetInfoNullTagTest()
+        {
+            Assert.DoesNotThrow(() =>
+            {
+                PhotoInfo info = AuthInstance.PhotosGetInfo("52491349517");
+            });
+        }
+
+        [Test]
         public void PhotosGetInfoUnauthenticatedTest()
         {
             PhotoInfo info = Instance.PhotosGetInfo("4268023123");
@@ -101,7 +111,7 @@ namespace FlickrNetTest
 
             Assert.AreEqual("12. Sudoku", info.Title);
             Assert.AreEqual("It scares me sometimes how much some of my handwriting reminds me of Dad's " +
-                            "- in this photo there is one 5 that especially reminds me of his handwriting.", info.Description);
+                                            "- in this photo there is one 5 that especially reminds me of his handwriting.", info.Description);
 
             //Owner
             Assert.AreEqual("41888973@N00", info.OwnerUserId);
@@ -214,7 +224,7 @@ namespace FlickrNetTest
         [Test]
         public void TestPhotoNotFound()
         {
-            Should.Throw< PhotoNotFoundException>(() => Instance.PhotosGetInfo("abcd"));
+            Should.Throw<PhotoNotFoundException>(() => Instance.PhotosGetInfo("abcd"));
         }
 
         [Test]
@@ -257,12 +267,12 @@ namespace FlickrNetTest
         public void PhotoInfoUrlsShouldMatchSizes()
         {
             var photos =
-                Instance.PhotosSearch(new PhotoSearchOptions
-                                          {
-                                              UserId = TestData.TestUserId,
-                                              PerPage = 1,
-                                              Extras = PhotoSearchExtras.AllUrls
-                                          });
+                    Instance.PhotosSearch(new PhotoSearchOptions
+                    {
+                        UserId = TestData.TestUserId,
+                        PerPage = 1,
+                        Extras = PhotoSearchExtras.AllUrls
+                    });
 
             var photo = photos.First();
 

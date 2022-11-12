@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Xml;
 
 namespace FlickrNet
 {
@@ -399,7 +399,7 @@ namespace FlickrNet
         /// </summary>
         public string OriginalUrl
         {
-            get 
+            get
             {
                 if (string.IsNullOrEmpty(OriginalFormat))
                     return null;
@@ -481,6 +481,10 @@ namespace FlickrNet
                         break;
                     case "path_alias":
                         PathAlias = reader.Value;
+                        break;
+                    case "gift":
+                        // ignore
+                        reader.Skip();
                         break;
                     default:
                         UtilityMethods.CheckParsingException(reader);
@@ -804,7 +808,7 @@ namespace FlickrNet
         /// Is the author of this note has been deleted.
         /// </summary>
         public bool? AuthorIsDeleted { get; set; }
-        
+
         /// <summary>
         /// The x (left) position of the top left corner of the note.
         /// </summary>
@@ -988,7 +992,7 @@ namespace FlickrNet
 
             reader.Read();
 
-            TagText = reader.ReadContentAsString();
+            TagText = reader.NodeType == XmlNodeType.Text ? reader.ReadContentAsString() : null;
 
             reader.Skip();
         }
